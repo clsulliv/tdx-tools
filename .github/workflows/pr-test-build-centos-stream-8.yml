@@ -1,7 +1,7 @@
 name: PR Test Building Package for CentOS Stream 8
 
 on:
-  pull_request:
+  push:
     paths:
     - 'build/centos-stream-8/**'
 
@@ -10,27 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.1.0
-      - name: Build grub
-        uses: ./build/centos-stream-8/pkg-builder
-        with:
-          package: intel-mvp-tdx-guest-grub2
-      - name: Build shim package
-        uses: ./build/centos-stream-8/pkg-builder
-        with:
-          package: intel-mvp-tdx-guest-shim
-      - name: Build tdvf
-        uses: ./build/centos-stream-8/pkg-builder
-        with:
-          package: intel-mvp-tdx-tdvf
-      - name: Build qemu-kvm
-        uses: ./build/centos-stream-8/pkg-builder
-        with:
-          package: intel-mvp-tdx-qemu-kvm
       - name: Build libvirt
         uses: ./build/centos-stream-8/pkg-builder
         with:
           package: intel-mvp-tdx-libvirt
-      - name: Build tdx-guest-kernel 
+      - name: Cleanup
+        run: |
+          rm -rf *
+      - name: Build tdx-guest-kernel
         uses: ./build/centos-stream-8/pkg-builder
         with:
           package: intel-mvp-tdx-guest-kernel
+      - name: check dir
+        run: |
+          ls -lah
